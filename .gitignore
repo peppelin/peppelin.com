@@ -1,0 +1,11 @@
+# Backup & Temp Files
+*.old
+*.old_*
+*~
+.DS_Store
+
+# IDEs
+.idea/
+.vscode/
+.gemini/
+.env

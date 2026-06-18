@@ -1,0 +1,41 @@
+name: Deploy to AWS S3
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION || 'eu-west-1' }}
+
+      - name: Deploy to S3 Bucket
+        run: |
+          aws s3 sync . s3://www.peppelin.com \
+            --delete \
+            --exclude ".git/*" \
+            --exclude ".github/*" \
+            --exclude "*.old*" \
+            --exclude "v2/*" \
+            --exclude "README.md"
+
+      # Opcional: Si utilizas CloudFront para servir la web, puedes configurar
+      # el secreto CLOUDFRONT_DISTRIBUTION_ID y descomentar este bloque para
+      # que invalide la caché automáticamente en cada subida.
+      # - name: Invalidate CloudFront Cache
+      #   if: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+      #   run: |
+      #     aws cloudfront create-invalidation \
+      #       --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+      #       --paths "/*"

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joan Gargallo | Conversational AI Portfolio</title>
+    <meta name="description"
+        content="Pregunta al Asistente de IA oficial de Joan Gargallo sobre su experiencia como CTO, Director de Ingeniería y Platform Director.">
+    <meta name="author" content="Joan Gargallo">
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body class="chat-page-body">
+    <!-- Global SVG definitions -->
+    <svg style="display: none;">
+        <defs>
+            <linearGradient id="geminiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#9b5de5"/>
+                <stop offset="50%" stop-color="#f15bb5"/>
+                <stop offset="100%" stop-color="#00f5d4"/>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <!-- Decorative background elements -->
+    <div class="bg-orb-1"></div>
+    <div class="bg-orb-2"></div>
+
+    <!-- ChatGPT-Style Main Wrapper -->
+    <div class="chat-app-container">
+        <!-- Collapsible Sidebar -->
+        <aside class="chat-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/images/joan.jpg" alt="Joan Gargallo">
+                    <div>
+                        <h3>Joan Gargallo</h3>
+                        <span>AI CTO / Director</span>
+                    </div>
+                </div>
+                <button class="sidebar-toggle-btn" id="sidebar-close-btn" aria-label="Cerrar barra lateral">
+                    <i class="fa-solid fa-angles-left"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="cv.html" class="sidebar-nav-item">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span>Ver CV Tradicional</span>
+                </a>
+                <a href="tel:+34600000000" class="sidebar-nav-item">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>Llamar al Teléfono</span>
+                </a>
+                <a href="mailto:peppelin@gmail.com" class="sidebar-nav-item">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>Contacto Directo</span>
+                </a>
+                <a href="https://t.me/peppelin" target="_blank" rel="noopener noreferrer" class="sidebar-nav-item">
+                    <i class="fa-brands fa-telegram"></i>
+                    <span>Telegram Mensaje</span>
+                </a>
+                <a href="http://linkedin.com/in/jgargallo" target="_blank" rel="noopener noreferrer"
+                    class="sidebar-nav-item">
+                    <i class="fa-brands fa-linkedin"></i>
+                    <span>LinkedIn Perfil</span>
+                </a>
+                <a href="https://github.com/peppelin" target="_blank" rel="noopener noreferrer"
+                    class="sidebar-nav-item">
+                    <i class="fa-brands fa-github"></i>
+                    <span>GitHub Código</span>
+                </a>
+                <a href="https://twitter.com/peppelin" target="_blank" rel="noopener noreferrer"
+                    class="sidebar-nav-item">
+                    <i class="fa-brands fa-x-twitter"></i>
+                    <span>Twitter / X</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="settings-trigger-btn" class="sidebar-footer-btn">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Configurar Gemini API</span>
+                </button>
+                <div class="sidebar-footer-text">
+                    &copy; 2026 peppelin.com
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+            <!-- Top Navigation Bar (Mobile Header) -->
+            <header class="chat-top-bar">
+                <button class="menu-toggle-btn" id="sidebar-open-btn" aria-label="Abrir barra lateral">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="top-bar-title">Joan's AI Agent</div>
+                <a href="cv.html" class="top-bar-cv-btn" title="Ver CV"><i class="fa-solid fa-file-invoice"></i> CV</a>
+            </header>
+
+            <!-- API Key Configuration Modal Overlay (Inside Panel) -->
+            <div id="settings-panel-overlay" class="settings-panel-overlay">
+                <div class="settings-modal-card">
+                    <button id="settings-modal-close" class="settings-modal-close-btn">&times;</button>
+                    <h5>Configurar Gemini API Key</h5>
+                    <p>Introduce tu API Key de Google AI Studio para entablar una conversación directa con Gemini (ej.
+                        <code>gemini-2.5-flash</code>). La clave se almacena exclusivamente en tu navegador de forma
+                        segura.</p>
+                    <div class="input-group">
+                        <input type="password" id="api-key-input-field" placeholder="AIzaSy..." autocomplete="off">
+                    </div>
+                    <div class="settings-modal-buttons">
+                        <button id="save-api-key-btn" class="modal-btn primary">Guardar</button>
+                        <button id="clear-api-key-btn" class="modal-btn secondary">Borrar Clave</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ChatGPT Workspace -->
+            <div class="chat-workspace">
+                <!-- Welcome Screen (Shown by default when no messages) -->
+                <div class="welcome-container" id="welcome-screen">
+                    <div class="welcome-icon">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <h2>¿Qué te gustaría saber sobre Joan Gargallo?</h2>
+                    <p class="welcome-subtitle">Pregunta al agente virtual oficial sobre su experiencia como CTO,
+                        Platform Director e integración de IA.</p>
+                    
+                    <div class="api-key-promo-banner" onclick="document.getElementById('settings-trigger-btn').click()" title="Configurar Gemini API Key">
+                        <i class="fa-solid fa-key promo-icon"></i>
+                        <p><strong>¿Quieres probar el modo inteligente?</strong> Carga tu API Key de Gemini desde el botón de ajustes o haciendo clic aquí para chatear libremente con respuestas reales basadas en mi CV y perfil de LinkedIn.</p>
+                    </div>
+
+                    <div class="suggestion-grid">
+                        <button class="welcome-suggestion-card" data-question="¿Cuál es la experiencia de Joan con IA?">
+                            <i class="fa-solid fa-brain card-icon"></i>
+                            <strong>Experiencia en IA</strong>
+                            <span>Másteres en La Salle y proyecto INDRAMIND</span>
+                        </button>
+                        <button class="welcome-suggestion-card" data-question="Dame su CV en formato Markdown">
+                            <i class="fa-solid fa-code card-icon"></i>
+                            <strong>CV en Markdown</strong>
+                            <span>Obtén el CV completo formateado para copiar</span>
+                        </button>
+                        <button class="welcome-suggestion-card"
+                            data-question="¿Qué tecnologías de Platform Engineering domina?">
+                            <i class="fa-solid fa-cubes card-icon"></i>
+                            <strong>Platform Stack</strong>
+                            <span>Kubernetes, OpenShift, Terraform y Airgap</span>
+                        </button>
+                        <button class="welcome-suggestion-card" data-question="¿Cómo puedo contactar con Joan?">
+                            <i class="fa-solid fa-address-book card-icon"></i>
+                            <strong>Datos de Contacto</strong>
+                            <span>Email, LinkedIn, redes sociales y ubicación</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat History Area -->
+                <div class="fullscreen-chat-history" id="fullscreen-chat-history">
+                    <!-- Messages will be injected dynamically -->
+                </div>
+
+                <!-- Bottom Input Form Panel -->
+                <div class="chat-input-panel-wrapper">
+                    <form id="fullscreen-chat-form" class="fullscreen-chat-form">
+                        <input type="text" id="fullscreen-chat-input"
+                            placeholder="Pregunta algo sobre Joan (ej: ¿Dónde trabajó en 2023?)" autocomplete="off"
+                            required>
+                        <button type="submit" id="fullscreen-chat-send" aria-label="Enviar mensaje">
+                            <i class="fa-solid fa-arrow-up"></i>
+                        </button>
+                    </form>
+                    <div class="chat-disclaimer">
+                        Joan's AI Agent puede cometer errores. Por defecto funciona offline; añade una API Key de Gemini
+                        en ajustes para respuestas dinámicas completas.
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toggle & AI Chatbot Scripting -->
+    <script>
+        // Sidebar Toggles
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOpenBtn = document.getElementById('sidebar-open-btn');
+        const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
+
+        sidebarOpenBtn.addEventListener('click', () => {
+            sidebar.classList.add('active');
+        });
+
+        sidebarCloseBtn.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+        });
+
+        // Settings Overlay Toggles
+        const settingsOverlay = document.getElementById('settings-panel-overlay');
+        const settingsTriggerBtn = document.getElementById('settings-trigger-btn');
+        const settingsModalClose = document.getElementById('settings-modal-close');
+        const apiKeyInputField = document.getElementById('api-key-input-field');
+        const saveApiKeyBtn = document.getElementById('save-api-key-btn');
+        const clearApiKeyBtn = document.getElementById('clear-api-key-btn');
+
+        let apiKey = localStorage.getItem('gemini_api_key') || '';
+        if (apiKey) {
+            apiKeyInputField.value = apiKey;
+        }
+
+        settingsTriggerBtn.addEventListener('click', () => {
+            settingsOverlay.classList.add('active');
+        });
+
+        settingsModalClose.addEventListener('click', () => {
+            settingsOverlay.classList.remove('active');
+        });
+
+        saveApiKeyBtn.addEventListener('click', () => {
+            const val = apiKeyInputField.value.trim();
+            if (val) {
+                localStorage.setItem('gemini_api_key', val);
+                apiKey = val;
+                alert('API Key de Gemini guardada correctamente.');
+                settingsOverlay.classList.remove('active');
+            } else {
+                alert('Por favor introduce una clave válida.');
+            }
+        });
+
+        clearApiKeyBtn.addEventListener('click', () => {
+            localStorage.removeItem('gemini_api_key');
+            apiKey = '';
+            apiKeyInputField.value = '';
+            alert('API Key de Gemini eliminada.');
+            settingsOverlay.classList.remove('active');
+        });
+
+        // Chat Controller Elements
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const chatHistoryDiv = document.getElementById('fullscreen-chat-history');
+        const chatForm = document.getElementById('fullscreen-chat-form');
+        const chatInput = document.getElementById('fullscreen-chat-input');
+
+        let chatHistory = [];
+
+        // Hardcoded Markdown CV template
+        const MARKDOWN_CV = `# Joan Gargallo
+**Director de Ingeniería y Operaciones / AI CTO**
+Barcelona, España | peppelin@gmail.com | [LinkedIn](http://linkedin.com/in/jgargallo) | [GitHub](https://github.com/peppelin)
+
+## Resumen Profesional
+Director de Ingeniería y Operaciones (CTO) especializado en la automatización de procesos, la integración de Inteligencia Artificial en operaciones y la gobernanza de plataformas de software a gran escala (Platform Engineering). Trayectoria sólida en DevOps, SRE y entornos complejos o airgap.
+
+## Stack Tecnológico
+* **Inteligencia Artificial**: AI Gen / LLMs, n8n, nyno, Agentic AI, Prompt Engineering.
+* **Platform & SRE**: Kubernetes, OpenShift, Terraform, PaaS, Docker, GCP, AWS, Azure, Entornos Airgap.
+* **Dirección & Estrategia**: CTO Leadership, ALM, Operaciones IT, Metodologías Ágiles, Liderazgo de Equipos, Gestión de Presupuestos.
+* **Desarrollo**: Go (Golang), Python, Linux, CI/CD.
+
+## Experiencia Profesional
+
+### Responsable de Operaciones / IT Manager | Paradigma Digital (2024 - Presente)
+* Operaciones técnicas para EUROCONTROL en proyecto PaaS.
+* **Proyecto INDRAMIND**: Gobierno de ALM en Platform Engineering en plataformas airgap. Implantación de modelos de IA generativa para agilizar tareas (vulnerabilidades, release notes, documentación, evidencias de certificación).
+
+### Director de Ingeniería | Immfly (2022 - 2024)
+* Digitalización y automatización de procesos operacionales a gran escala.
+* Implantación global de Jira, Confluence y Service Desk.
+* Automatización de gestión de dispositivos y configuraciones en remoto.
+* Integración de soluciones de IA en operaciones.
+* Dirección de POC de comunicaciones satelitales.
+
+### Product Owner de Solución Cloud & DevOps | Lidl Digital (2018 - 2021)
+* PO para la solución cloud de Lidl Digital (transformación digital y migración a GCP/Azure).
+* Orquestación de pipelines CI/CD y mejora de observabilidad cloud.
+
+*(El historial anterior de 2011 a 2018 incluye puestos como CTO en Mediastream, DevOps Manager en AXA, Operations Engineer en ADP y Sysadmin en Opscaling).*
+
+## Educación y Formación
+* **Dos Másteres en Inteligencia Artificial** (2024) - La Salle Campus Barcelona (3 meses c/u).
+* **Executive MBA (EMBA)** (2016 - 2018) - La Salle University.
+* **Seminar in American Business** (2017) - Saint Mary's College of California.
+* **Administración de Sistemas Informáticos** (2000 - 2001) - CEP.
+
+---
+*Generado automáticamente por el Asistente de IA de peppelin.com*`;
+
+        // Render message with basic markdown support (specifically code blocks) and HTML for agents
+        function formatMarkdown(text, isAgent = false) {
+            let formatted = text;
+
+            if (!isAgent) {
+                // Escape HTML for user input to prevent XSS
+                formatted = formatted
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+            }
+
+            // 1. Code blocks (first, so we don't parse markdown inside code blocks)
+            const codeBlocks = [];
+            const codeBlockRegex = /```(markdown|html|javascript|css)?([\s\S]*?)```/g;
+            formatted = formatted.replace(codeBlockRegex, (match, lang, codeContent) => {
+                const index = codeBlocks.length;
+                codeBlocks.push({
+                    lang: lang || 'plaintext',
+                    code: codeContent.trim()
+                });
+                return `__CODE_BLOCK_PLACEHOLDER_${index}__`;
+            });
+
+            // 2. Headings (only at the start of a line or after a newline)
+            formatted = formatted.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+            formatted = formatted.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+            formatted = formatted.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+
+            // 3. Bold/Italic text
+            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+            // 4. Bullet points
+            const lines = formatted.split('\n');
+            let inList = false;
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i].trim();
+                if (line.startsWith('- ') || line.startsWith('* ')) {
+                    const content = line.substring(2).trim();
+                    if (!inList) {
+                        lines[i] = '<ul><li>' + content + '</li>';
+                        inList = true;
+                    } else {
+                        lines[i] = '<li>' + content + '</li>';
+                    }
+                } else {
+                    if (inList) {
+                        lines[i] = '</ul>' + lines[i];
+                        inList = false;
+                    }
+                }
+            }
+            if (inList) {
+                lines.push('</ul>');
+            }
+            formatted = lines.join('\n');
+
+            // 5. Links
+            formatted = formatted.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+            // 6. Restore code blocks with clean formatting
+            let hasCodeBlock = false;
+            codeBlocks.forEach((block, index) => {
+                hasCodeBlock = true;
+                const escapedCode = block.code
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+
+                const blockHtml = `<div class="chat-code-block"><pre><code class="language-${block.lang}">${escapedCode}</code></pre></div>`;
+                formatted = formatted.replace(`__CODE_BLOCK_PLACEHOLDER_${index}__`, blockHtml);
+            });
+
+            // 7. Paragraphs & simple line breaks
+            formatted = formatted.replace(/\n/g, '<br>');
+            formatted = formatted.replace(/<\/ul><br>/g, '</ul>');
+            formatted = formatted.replace(/<ul><br>/g, '<ul>');
+            formatted = formatted.replace(/<li><br>/g, '<li>');
+            formatted = formatted.replace(/<\/li><br>/g, '</li>');
+
+            return { html: formatted, hasCodeBlock };
+        }
+
+        // Helper to copy CV
+        window.copyCVToClipboard = function () {
+            navigator.clipboard.writeText(MARKDOWN_CV).then(() => {
+                alert('CV en formato Markdown copiado al portapapeles.');
+            }).catch(err => {
+                console.error('Error al copiar: ', err);
+            });
+        };
+
+        window.generateMarkdownCVMessage = function () {
+            const userMsgText = "Quiero el CV en formato Markdown";
+            appendMessage('user', userMsgText);
+            chatHistory.push({ role: 'user', text: userMsgText });
+
+            // Disable buttons in the selection cards to prevent double-clicks
+            const selectDivs = document.querySelectorAll('.cv-format-selection');
+            if (selectDivs.length > 0) {
+                const lastSelect = selectDivs[selectDivs.length - 1];
+                const buttons = lastSelect.querySelectorAll('button, a');
+                buttons.forEach(btn => {
+                    btn.style.pointerEvents = 'none';
+                    btn.style.opacity = '0.6';
+                });
+            }
+
+            if (apiKey) {
+                getGeminiResponse(userMsgText);
+            } else {
+                setTimeout(() => {
+                    const mockReply = getMockResponse(userMsgText);
+                    chatHistory.push({ role: 'model', text: mockReply });
+                    appendMessage('agent', mockReply);
+                }, 600);
+            }
+        };
+
+        function appendMessage(role, text, isGemini = false) {
+            // Hide welcome screen when first message is added
+            welcomeScreen.style.display = 'none';
+            chatHistoryDiv.style.display = 'flex';
+
+            const messageWrapper = document.createElement('div');
+            messageWrapper.classList.add('fullscreen-msg-row');
+            if (role === 'user') {
+                messageWrapper.classList.add('user-row');
+            } else {
+                messageWrapper.classList.add('agent-row');
+                if (isGemini) {
+                    messageWrapper.classList.add('gemini-row-agent');
+                }
+            }
+
+            const avatarDiv = document.createElement('div');
+            avatarDiv.classList.add('msg-avatar');
+            if (role === 'user') {
+                avatarDiv.innerHTML = '<i class="fa-solid fa-user"></i>';
+            } else {
+                if (isGemini) {
+                    // Sparkle SVG Gemini Logo
+                    avatarDiv.innerHTML = `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="gemini-avatar-icon">
+                        <path d="M12 2C12 7.52285 7.52285 12 2 12C7.52285 12 12 16.4771 12 22C12 16.4771 16.4771 12 22 12C16.4771 12 12 7.52285 12 2Z" fill="url(#geminiGrad)"/>
+                    </svg>`;
+                } else {
+                    // Cute SVG Robot Head (independent of FontAwesome)
+                    avatarDiv.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="robot-avatar-icon" style="width: 18px; height: 18px;">
+                        <path d="M12 6V2"/>
+                        <circle cx="12" cy="2" r="1" fill="currentColor"/>
+                        <rect x="4" y="6" width="16" height="12" rx="3"/>
+                        <circle cx="9" cy="11" r="1.2" fill="currentColor"/>
+                        <circle cx="15" cy="11" r="1.2" fill="currentColor"/>
+                        <path d="M9 15h6"/>
+                        <path d="M4 10v4M20 10v4"/>
+                    </svg>`;
+                }
+            }
+
+            const contentDiv = document.createElement('div');
+            contentDiv.classList.add('msg-content-wrapper');
+
+            const { html, hasCodeBlock } = formatMarkdown(text, role === 'agent');
+
+            const senderName = role === 'user' ? 'Tú' : (isGemini ? 'Gemini AI (Agente Inteligente)' : 'Asistente de Joan (Local)');
+            let contentHtml = `<div class="msg-sender-name">${senderName}</div><div class="msg-text">${html}`;
+            if (hasCodeBlock) {
+                contentHtml += `<div class="chat-msg-header-btn">
+                    <button class="chat-copy-btn" onclick="window.copyCVToClipboard()"><i class="fa-solid fa-copy"></i> Copiar CV</button>
+                </div>`;
+            }
+            contentHtml += `</div>`;
+
+            contentDiv.innerHTML = contentHtml;
+            messageWrapper.appendChild(avatarDiv);
+            messageWrapper.appendChild(contentDiv);
+            chatHistoryDiv.appendChild(messageWrapper);
+            chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
+        }
+
+        // Offline response engine
+        function getMockResponse(input) {
+            const text = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+            // Explicit Markdown requested
+            if (text.includes('formato markdown') || text.includes('en markdown') || text.includes('cv en markdown') || text === 'dame su cv en formato markdown') {
+                return `Aquí tienes el CV completo de Joan en formato Markdown. Puedes copiarlo usando el botón inferior:\n\n\`\`\`markdown\n${MARKDOWN_CV}\n\`\`\``;
+            }
+
+            // General CV requested (show options)
+            if (text.includes('cv') || text.includes('curriculum') || text.includes('hoja de vida') || text.includes('descargar') || text.includes('resume')) {
+                return `Aquí tienes el CV de Joan Gargallo en dos formatos. Elige el que prefieras:
+<div class="cv-format-selection">
+    <a href="cv.html" class="cv-select-btn html-btn">
+        <i class="fa-solid fa-file-invoice"></i> Ver en HTML (Web)
+    </a>
+    <button onclick="window.generateMarkdownCVMessage()" class="cv-select-btn markdown-btn">
+        <i class="fa-solid fa-code"></i> Generar en Markdown
+    </button>
+</div>`;
+            }
+
+            if (text.includes('ia') || text.includes('artificial') || text.includes('n8n') || text.includes('nyno') || text.includes('agentic')) {
+                return `Joan cuenta con conocimientos especializados en Inteligencia Artificial. En 2024 cursó **dos másteres en IA de 3 meses de duración en La Salle** Campus Barcelona.\n\nEn su carrera:\n- **Paradigma Digital (INDRAMIND)**: Implementó modelos de IA generativa para la resolución automatizada de vulnerabilidades, generación de comentarios de código, notas de release y estructuración de evidencias para certificaciones.\n- **Immfly**: Desplegó herramientas basadas en IA para eficientar las operaciones operativas diarias.\n- **Skills clave**: Agentic AI, Prompt Engineering, n8n y nyno.`;
+            }
+            if (text.includes('paradigma') || text.includes('indramind') || text.includes('actual') || text.includes('eurocontrol') || text.includes('paas')) {
+                return `Actualmente (2024 - Presente), Joan trabaja como **Responsable de Operaciones / IT Manager en Paradigma Digital**.\n- Dirige las operaciones técnicas de una plataforma PaaS para **EUROCONTROL**.\n- Gestiona el ciclo de vida de aplicaciones (ALM) en el proyecto de Platform Engineering **INDRAMIND** en plataformas en red aislada (airgap), integrando IA generativa para maximizar la agilidad del equipo de desarrollo.`;
+            }
+            if (text.includes('immfly') || text.includes('satelite') || text.includes('ingenieria') || text.includes('flota')) {
+                return `En **Immfly (2022 - 2024)**, Joan asumió el rol de **Director de Ingeniería**:\n- Se enfocó en la digitalización e industrialización de procesos internos a escala global.\n- Gestionó la implantación e integración de Jira, Confluence y Service Desk.\n- Lideró el desarrollo de sistemas para control y despliegues en dispositivos remotos en flota.\n- Dirigió una Prueba de Concepto (POC) de comunicaciones satelitales.`;
+            }
+            if (text.includes('lidl') || text.includes('schwarz') || text.includes('po') || text.includes('cloud')) {
+                return `En **Lidl Digital / Schwarz IT (2018 - 2021)**, Joan ejerció como **Product Owner de Solución Cloud & DevOps**:\n- Lideró la estrategia de migración cloud y transformación digital a gran escala (GCP e híbrido en Azure).\n- Diseñó e impulsó pipelines de CI/CD para automatizar procesos globales.`;
+            }
+            if (text.includes('contacto') || text.includes('contactar') || text.includes('email') || text.includes('correo') || text.includes('mail') || text.includes('telegram') || text.includes('escribir') || text.includes('llamar') || text.includes('telefono') || text.includes('tlf') || text.includes('movil') || text.includes('celular') || text.includes('hablar') || text.includes('redes')) {
+                return `Puedes contactar directamente con Joan Gargallo a través de los siguientes canales:\n- 📞 **Llamar por Teléfono**: [+34 605 329 810](tel:+34605329810) (o escribir por WhatsApp)\n- ✉️ **Enviar un Email**: [peppelin@gmail.com](mailto:peppelin@gmail.com)\n- 💬 **Escribir por Telegram**: [@peppelin](https://t.me/peppelin)\n\nTambién puedes revisar su [LinkedIn](http://linkedin.com/in/jgargallo) y perfil de [GitHub](https://github.com/peppelin).`;
+            }
+            if (text.includes('estudios') || text.includes('educacion') || text.includes('la salle') || text.includes('formacion') || text.includes('emba') || text.includes('mba') || text.includes('master')) {
+                return `La trayectoria educativa de Joan consta de:\n1. **Dos Másteres en Inteligencia Artificial** (La Salle, 2024).\n2. **Executive MBA (EMBA)** (La Salle, 2016-2018).\n3. **Seminar in American Business** (Saint Mary's College of California, 2017).\n4. **Administración de Sistemas Informáticos** (CEP, 2000-2001).`;
+            }
+            if (text.includes('kubernetes') || text.includes('openshift') || text.includes('terraform') || text.includes('platform') || text.includes('devops') || text.includes('sre') || text.includes('cloud') || text.includes('docker') || text.includes('airgap')) {
+                return `Joan tiene un perfil altamente especializado en Platform Engineering e infraestructura. Su stack domina:\n- **Orquestación y contenedores**: Kubernetes, OpenShift, Docker.\n- **Automatización & IaC**: Terraform.\n- **Entornos seguros**: Plataformas Airgap (aisladas de red) y nubes públicas/híbridas (GCP, Azure, AWS).\n- **Operaciones**: SRE, DevOps, integración continua y gobernanza de ALM.`;
+            }
+            if (text.includes('hola') || text.includes('saludos') || text.includes('buenas') || text.includes('buenos dias') || text.includes('buenas tardes')) {
+                return `¡Hola! Soy el asistente virtual de Joan. Estoy aquí para resolver tus dudas sobre su perfil profesional de CTO, sus conocimientos de Platform Engineering y su experiencia con Inteligencia Artificial. ¿Qué te gustaría saber?`;
+            }
+
+            return `Gracias por tu interés. Como agente de Joan, te sugiero consultarme sobre su trabajo en **Paradigma Digital**, **Immfly** o **Lidl**, su stack en **Inteligencia Artificial** o **Platform Engineering**, o solicitarme su **CV completo en Markdown**. ¿Qué te gustaría saber?`;
+        }
+
+        // Live API call to Gemini
+        async function getGeminiResponse(userText) {
+            welcomeScreen.style.display = 'none';
+            chatHistoryDiv.style.display = 'flex';
+
+            const typingRow = document.createElement('div');
+            typingRow.classList.add('fullscreen-msg-row', 'agent-row', 'gemini-row-agent');
+            typingRow.innerHTML = `<div class="msg-avatar">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="gemini-avatar-icon">
+                    <path d="M12 2C12 7.52285 7.52285 12 2 12C7.52285 12 12 16.4771 12 22C12 16.4771 16.4771 12 22 12C16.4771 12 12 7.52285 12 2Z" fill="url(#geminiGrad)"/>
+                </svg>
+            </div><div class="msg-content-wrapper"><div class="msg-text"><div class="typing-indicator"><span></span><span></span><span></span></div></div></div>`;
+            chatHistoryDiv.appendChild(typingRow);
+            chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
+
+            const systemInstruction = `Actúas como el Agente de Inteligencia Artificial oficial de Joan Gargallo. Responderás de forma profesional, concisa y amable a las preguntas de reclutadores e interesados sobre la experiencia, trayectoria y formación de Joan, basándote estrictamente en la información de su CV (disponible en cv.html) y su perfil de LinkedIn (linkedin.com/in/jgargallo).
+            Usa la siguiente información de su CV como tu única fuente de verdad:
+            - Nombre: Joan Gargallo
+            - Tagline: AI CTO, Director de Ingeniería y Operaciones
+            - Email: peppelin@gmail.com
+            - Telegram: @peppelin (https://t.me/peppelin)
+            - Teléfono: +34 605 329 810 (tel:+34605329810)
+            - LinkedIn: linkedin.com/in/jgargallo
+            - GitHub: github.com/peppelin
+            - Ubicación: Barcelona, España
+            - Experiencia Paradigma Digital (2024-Presente): Responsable de Operaciones, PaaS para EUROCONTROL, Proyecto INDRAMIND (ALM, Platform Engineering, plataformas airgap, e IA aplicada para autogeneración de comentarios, notas de release, vulnerabilidades, estructuración de tickets de certificación).
+            - Experiencia Immfly (2022-2024): Director de Ingeniería, automatización de procesos, Jira/Confluence/Service Desk, gestión remota de dispositivos en flota, IA en operaciones, POC con satélites.
+            - Experiencia Lidl Digital (2018-2021): Product Owner Cloud & DevOps, migración cloud GCP/Azure, CI/CD, SRE.
+            - Historial anterior (2011-2018): CTO en Mediastream, DevOps Manager en AXA, Operations Engineer en ADP, Sysadmin en Opscaling, Application Engineer en NTT, Founder en Cloudguard.
+            - Educación: Dos Másteres en Inteligencia Artificial en 2024 en La Salle (3 meses cada uno); EMBA en La Salle (2016-2018); Seminar in American Business en Saint Mary's College of California (2017); Administración de Sistemas Informáticos en CEP (2000-2001).
+            - Stack IA: AI Gen, LLMs, n8n, nyno, Agentic AI, Modelos de Lenguaje, Prompt Engineering.
+            - Stack Platform: Kubernetes, OpenShift, Terraform, PaaS, GCP, AWS, Azure, Docker, Airgap.
+
+            Si te preguntan por contacto, cómo contactar con Joan, email, correo, teléfono, tlf, whatsapp o telegram, sugiérele siempre contactar de las siguientes tres maneras principales:
+            1. Llamarle por Teléfono: +34 605 329 810 (o por WhatsApp)
+            2. Enviarle un Email: peppelin@gmail.com
+            3. Escribirle por Telegram: @peppelin (https://t.me/peppelin)
+
+            Si te piden el CV, currículum o datos de contacto profesionales en general (y no es una pregunta específica de tlf/email/telegram), a menos que especifiquen explícitamente formato markdown, responde ofreciendo las opciones de formato HTML y Markdown entregando EXACTAMENTE el siguiente bloque HTML (no inventes otra cosa ni añadas texto fuera de él):
+            Aquí tienes el CV de Joan Gargallo en dos formatos. Elige el que prefieras:
+            <div class="cv-format-selection">
+                <a href="cv.html" class="cv-select-btn html-btn">
+                    <i class="fa-solid fa-file-invoice"></i> Ver en HTML (Web)
+                </a>
+                <button onclick="window.generateMarkdownCVMessage()" class="cv-select-btn markdown-btn">
+                    <i class="fa-solid fa-code"></i> Generar en Markdown
+                </button>
+            </div>
+
+            Si te piden explícitamente el formato markdown (por ejemplo, "Quiero el CV en formato Markdown"), responde entregando el CV completo formateado en Markdown dentro de un bloque de código markdown (usando triple comilla invertida y la palabra markdown).
+            Si te preguntan algo que no está en la información provista, di educadamente que no dispones de esa información y sugiere enviar un correo a peppelin@gmail.com o telegram a @peppelin. Responde en español de forma profesional y concisa.`;
+
+            // Compile conversation history
+            const contents = chatHistory.slice(-8).map(msg => ({
+                role: msg.role === 'user' ? 'user' : 'model',
+                parts: [{ text: msg.text }]
+            }));
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: contents,
+                        systemInstruction: {
+                            parts: [{ text: systemInstruction }]
+                        },
+                        generationConfig: {
+                            temperature: 0.3,
+                            maxOutputTokens: 1000
+                        }
+                    })
+                });
+
+                if (chatHistoryDiv.contains(typingRow)) {
+                    chatHistoryDiv.removeChild(typingRow);
+                }
+
+                if (!response.ok) {
+                    const errText = await response.text();
+                    console.error("Gemini API Error Response Details:", errText);
+                    throw new Error('Gemini API Error: Status ' + response.status);
+                }
+
+                const data = await response.json();
+                const text = data.candidates[0].content.parts[0].text;
+
+                chatHistory.push({ role: 'model', text: text });
+                appendMessage('agent', text, true); // True -> shows Gemini Logo!
+
+            } catch (err) {
+                console.error("Gemini API call failed:", err);
+                if (chatHistoryDiv.contains(typingRow)) {
+                    chatHistoryDiv.removeChild(typingRow);
+                }
+                const fallbackText = getMockResponse(userText);
+                const errorDiagnosticMessage = `⚠️ **Nota:** No se pudo obtener respuesta de Gemini API. Mostrando respuesta de respaldo local:\n\n${fallbackText}`;
+                chatHistory.push({ role: 'model', text: fallbackText });
+                appendMessage('agent', errorDiagnosticMessage, false); // False -> shows default Robot!
+            }
+        }
+
+        // Form Submit
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            appendMessage('user', text);
+            chatHistory.push({ role: 'user', text: text });
+            chatInput.value = '';
+
+            if (apiKey) {
+                getGeminiResponse(text);
+            } else {
+                setTimeout(() => {
+                    const mockReply = getMockResponse(text);
+                    chatHistory.push({ role: 'model', text: mockReply });
+                    appendMessage('agent', mockReply, false);
+                }, 600);
+            }
+        });
+
+        // Sugestion Cards Clicks
+        welcomeScreen.addEventListener('click', (e) => {
+            const card = e.target.closest('.welcome-suggestion-card');
+            if (card) {
+                const q = card.getAttribute('data-question');
+                if (q) {
+                    chatInput.value = q;
+                    chatForm.dispatchEvent(new Event('submit'));
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,41 +1,31 @@
-name: Deploy to AWS S3
+name: Deploy to S3 and Invalidate CloudFront
 
 on:
   push:
     branches:
-      - master
+      - main  # o la rama que uses para desplegar
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: AWS
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4 # Actualizado a la versión estable v4
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION || 'eu-west-1' }}
+          aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Deploy to S3 Bucket
+      - name: Sync files to S3
         run: |
-          aws s3 sync . s3://www.peppelin.com \
-            --delete \
-            --exclude ".git/*" \
-            --exclude ".github/*" \
-            --exclude "*.old*" \
-            --exclude "v2/*" \
-            --exclude "README.md"
+          # Apuntamos el sync directamente a la carpeta ./public para que suba el contenido a la raíz de S3
+          aws s3 sync ./public s3://${{ vars.S3_BUCKET }} --delete --exclude ".git/*" --exclude ".github/*" --exclude "static/invitaciones/*"
 
-      # Opcional: Si utilizas CloudFront para servir la web, puedes configurar
-      # el secreto CLOUDFRONT_DISTRIBUTION_ID y descomentar este bloque para
-      # que invalide la caché automáticamente en cada subida.
-      # - name: Invalidate CloudFront Cache
-      #   if: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
-      #   run: |
-      #     aws cloudfront create-invalidation \
-      #       --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-      #       --paths "/*"
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ vars.DISTRIBUTION_ID }} --paths "/*"

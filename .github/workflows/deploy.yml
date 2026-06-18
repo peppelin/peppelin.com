@@ -3,7 +3,7 @@ name: Deploy to S3 and Invalidate CloudFront
 on:
   push:
     branches:
-      - main  # o la rama que uses para desplegar
+      - main  # Cambiado a 'main' como la rama principal para tus despliegues
 
 jobs:
   deploy:
@@ -23,8 +23,8 @@ jobs:
 
       - name: Sync files to S3
         run: |
-          # Apuntamos el sync directamente a la carpeta ./public para que suba el contenido a la raíz de S3
-          aws s3 sync ./public s3://${{ vars.S3_BUCKET }} --delete --exclude ".git/*" --exclude ".github/*" --exclude "static/invitaciones/*"
+          # Apuntamos el sync a '.' porque tu web estática está en la raíz de tu repo (no en /public)
+          aws s3 sync . s3://${{ vars.S3_BUCKET }} --delete --exclude ".git/*" --exclude ".github/*" --exclude "static/invitaciones/*" --exclude "*.old*" --exclude "v2/*"
 
       - name: Invalidate CloudFront Cache
         run: |

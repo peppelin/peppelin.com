@@ -314,7 +314,7 @@
         </section>
 
         <!-- Selected Work / Bento Grid below fold -->
-        <section class="w-full mt-section-gap space-y-stack-lg">
+        <section id="selected-work" class="w-full mt-section-gap space-y-stack-lg scroll-mt-24">
             <h2 class="font-headline-md text-headline-md text-on-background text-center tracking-tight">Proyectos y Areas Destacadas</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
@@ -359,7 +359,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-surface-container-lowest w-full py-stack-lg border-t border-outline-variant/20 mt-auto">
+    <footer class="bg-surface-container-lowest w-full py-stack-lg pb-24 border-t border-outline-variant/20 mt-auto">
         <div class="flex flex-col md:flex-row justify-between items-center max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop gap-stack-md">
             <div class="font-label-md text-label-md text-on-surface-variant text-center md:text-left">
                 © 2026 Joan Gargallo. Diseñado para liderar proyectos de Platform Engineering e IA.
@@ -372,6 +372,22 @@
             </div>
         </div>
     </footer>
+
+    <!-- BottomNavBar for Mobile Devices -->
+    <nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 md:hidden bg-background/80 backdrop-blur-md border-t border-outline-variant/30 shadow-[0_-4px_20px_rgba(99,102,241,0.15)] rounded-t-xl">
+        <a class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-xl px-4 py-1.5 active:scale-90 duration-200" href="#" id="mobile-nav-home">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 20px;">chat_bubble</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider mt-0.5">Chat</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 duration-200 px-4 py-1.5" href="#selected-work" id="mobile-nav-work">
+            <span class="material-symbols-outlined" style="font-size: 20px;">folder_special</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider mt-0.5">Proyectos</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 duration-200 px-4 py-1.5" href="cv.html" id="mobile-nav-cv">
+            <span class="material-symbols-outlined" style="font-size: 20px;">description</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider mt-0.5">Ver CV</span>
+        </a>
+    </nav>
 
     <!-- API Key Configuration Modal Overlay -->
     <div id="settings-panel-overlay" class="fixed inset-0 z-[100] hidden items-center justify-center bg-background/60 backdrop-blur-md p-4">
@@ -933,6 +949,60 @@ Director de Ingeniería y Operaciones (CTO) especializado en la automatización 
                     chatHistory.push({ role: 'model', text: mockReply });
                     appendMessage('agent', mockReply, false);
                 }, 600);
+            }
+        });
+
+        // Smooth scroll for mobile navigation
+        const mobileNavHome = document.getElementById('mobile-nav-home');
+        const mobileNavWork = document.getElementById('mobile-nav-work');
+
+        if (mobileNavHome) {
+            mobileNavHome.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                setActiveMobileNav('mobile-nav-home');
+            });
+        }
+
+        if (mobileNavWork) {
+            mobileNavWork.addEventListener('click', (e) => {
+                e.preventDefault();
+                const workSection = document.getElementById('selected-work');
+                if (workSection) {
+                    workSection.scrollIntoView({ behavior: 'smooth' });
+                    setActiveMobileNav('mobile-nav-work');
+                }
+            });
+        }
+
+        function setActiveMobileNav(activeId) {
+            const navIds = ['mobile-nav-home', 'mobile-nav-work', 'mobile-nav-cv'];
+            navIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (id === activeId) {
+                    el.classList.add('text-primary', 'bg-primary/10', 'rounded-xl');
+                    el.classList.remove('text-on-surface-variant');
+                } else {
+                    el.classList.remove('text-primary', 'bg-primary/10', 'rounded-xl');
+                    el.classList.add('text-on-surface-variant');
+                }
+            });
+        }
+
+        // Scroll spy for mobile navigation
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth >= 768) return; // Only for mobile
+            
+            const workSection = document.getElementById('selected-work');
+            if (!workSection) return;
+            
+            const rect = workSection.getBoundingClientRect();
+            // If the work section top is past halfway up the screen
+            if (rect.top <= window.innerHeight / 2) {
+                setActiveMobileNav('mobile-nav-work');
+            } else {
+                setActiveMobileNav('mobile-nav-home');
             }
         });
     </script>
